@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>BPMN Editor</title>
+  <link rel="stylesheet" href="https://unpkg.com/bpmn-js@9.0.3/dist/assets/diagram-js.css">
+  <link rel="stylesheet" href="https://unpkg.com/bpmn-js@9.0.3/dist/assets/bpmn-font/css/bpmn-embedded.css">
+  <style>
+    #canvas {
+      width: 100%;
+      height: 600px;
+      border: 1px solid #ccc;
+      margin-bottom: 20px;
+    }
+    #xml-output {
+      width: 100%;
+      height: 200px;
+    }
+  </style>
+</head>
+<body>
+  <div id="canvas"></div>
+  <textarea id="xml-output" readonly></textarea>
+
+  <script src="https://unpkg.com/bpmn-js@9.0.3/dist/bpmn-modeler.development.js"></script>
+  <script>
+    (function() {
+      // Initial BPMN XML
+      const initialBpmn = `<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" targetNamespace="http://bpmn.io/schema/bpmn">
+  <bpmn:process id="Process_1" isExecutable="false">
+    <bpmn:startEvent id="StartEvent_1" name="bahnu prakash" />
+    <bpmn:startEvent id="Event_0nfiejg" name="venkatsai" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_1">
+      <bpmndi:BPMNShape id="StartEvent_1_di" bpmnElement="StartEvent_1">
+        <dc:Bounds x="173" y="102" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="154" y="145" width="74" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0nfiejg_di" bpmnElement="Event_0nfiejg">
+        <dc:Bounds x="122" y="192" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="117" y="235" width="46" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
+`;
+
+      // Create a BPMN modeler instance
+      const bpmnModeler = new BpmnJS({
+        container: '#canvas'
+      });
+
+      // Load initial BPMN diagram
+      bpmnModeler.importXML(initialBpmn, (err) => {
+        if (err) {
+          console.error('Error loading BPMN diagram:', err);
+        } else {
+          console.log('BPMN diagram loaded successfully');
+          updateXmlOutput(); // Initial XML display
+        }
+      });
+
+      // Function to save and display XML
+      function updateXmlOutput() {
+        bpmnModeler.saveXML({ format: true }, (err, xml) => {
+          if (err) {
+            console.error('Error saving BPMN XML:', err);
+          } else {
+            document.getElementById('xml-output').value = xml;
+          }
+        });
+      }
+
+      // Event listener to update XML output when diagram changes
+      bpmnModeler.on('commandStack.changed', updateXmlOutput);
+    })();
+  </script>
+</body>
+</html>
